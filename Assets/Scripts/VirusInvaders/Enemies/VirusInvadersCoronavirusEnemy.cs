@@ -415,7 +415,7 @@ public class VirusInvadersCoronavirusEnemy : MonoBehaviour
                     CambiarAnimacion(spritesIdle, true, "idle");
                     break;
                 case EstadoEnemigo.Persiguiendo:
-                    CambiarAnimacion(spritesPulse, true, "pulse");
+                CambiarAnimacion(spritesPulse, true, "pulse");
                     break;
                 case EstadoEnemigo.Atacando:
                     CambiarAnimacion(spritesAttack, false, "attack");
@@ -436,17 +436,17 @@ public class VirusInvadersCoronavirusEnemy : MonoBehaviour
 
             case EstadoEnemigo.Persiguiendo:
                 // Perseguir al jugador
-                Vector2 direccion = (jugador.position - transform.position).normalized;
-                if (rb != null)
-                {
-                    rb.linearVelocity = direccion * velocidadMovimiento;
-                }
+            Vector2 direccion = (jugador.position - transform.position).normalized;
+            if (rb != null)
+            {
+                rb.linearVelocity = direccion * velocidadMovimiento;
+            }
                 break;
 
             case EstadoEnemigo.Atacando:
                 // Detenerse y atacar
-                if (rb != null)
-                {
+            if (rb != null)
+            {
                     rb.linearVelocity = Vector2.zero;
                 }
                 
@@ -455,7 +455,7 @@ public class VirusInvadersCoronavirusEnemy : MonoBehaviour
                 {
                     StartCoroutine(EjecutarAtaque());
                     tiempoUltimoAtaque = Time.time;
-                }
+            }
                 break;
         }
     }
@@ -479,15 +479,15 @@ public class VirusInvadersCoronavirusEnemy : MonoBehaviour
         {
             float distanciaFinal = Vector2.Distance(transform.position, jugador.position);
             if (distanciaFinal <= distanciaAtaque)
+        {
+            VirusInvadersPlayerController playerController = jugador.GetComponent<VirusInvadersPlayerController>();
+            if (playerController != null)
             {
-                VirusInvadersPlayerController playerController = jugador.GetComponent<VirusInvadersPlayerController>();
-                if (playerController != null)
-                {
-                    Vector2 direccionKnockback = (jugador.position - transform.position).normalized;
+                Vector2 direccionKnockback = (jugador.position - transform.position).normalized;
                     float damageAmount = 5f; // Usando daño fijo por ahora, podría usar dañoAtaque
                     playerController.RecibirDaño(direccionKnockback, damageAmount);
-                }
             }
+        }
         }
         
         // *** IMPORTANTE: Tras el ataque, el estado puede cambiar en ActualizarComportamiento() ***

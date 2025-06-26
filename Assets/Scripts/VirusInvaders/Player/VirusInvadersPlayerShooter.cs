@@ -108,10 +108,10 @@ public class VirusInvadersPlayerShooter : MonoBehaviour
             // Disparo normal hacia arriba
             if (Input.GetKeyDown(teclaDisparo))
             {
-                if (Time.time - tiempoUltimoDisparo >= cadenciaDisparo)
-                {
-                    Disparar();
-                    tiempoUltimoDisparo = Time.time;
+            if (Time.time - tiempoUltimoDisparo >= cadenciaDisparo)
+            {
+                Disparar();
+                tiempoUltimoDisparo = Time.time;
                 }
             }
             

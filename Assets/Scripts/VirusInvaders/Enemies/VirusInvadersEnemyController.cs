@@ -447,12 +447,12 @@ public class VirusInvadersEnemyController : MonoBehaviour
         {
             float distanciaFinal = Vector2.Distance(transform.position, player.position);
             if (distanciaFinal <= enemyData.attackRange)
+        {
+            VirusInvadersPlayerController playerController = player.GetComponent<VirusInvadersPlayerController>();
+            if (playerController != null)
             {
-                VirusInvadersPlayerController playerController = player.GetComponent<VirusInvadersPlayerController>();
-                if (playerController != null)
-                {
-                    Vector2 knockbackDirection = (player.position - transform.position).normalized;
-                    playerController.RecibirDaño(knockbackDirection, enemyData.attackDamage);
+                Vector2 knockbackDirection = (player.position - transform.position).normalized;
+                playerController.RecibirDaño(knockbackDirection, enemyData.attackDamage);
                 }
             }
         }
