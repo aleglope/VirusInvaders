@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cc2b970ab63ec8428b01140cd200d1d, type: 3}
+  m_Name: EnemyData_Static_Blue
+  m_EditorClassIdentifier: 
+  enemyName: Static Blue Virus
+  health: 50
+  attackDamage: 25
+  moveSpeed: 1.5
+  pointsValue: 10
+  virusType: 2
+  enemyColor: {r: 1, g: 1, b: 1, a: 1}
+  scale: 0.4
+  sortingLayerName: Characters
+  sortingOrder: 10
+  movementType: 0
+  movementParameters:
+  - 0.8
+  - 1.2
+  - 0.3
+  - 2
+  detectionRange: 1.5
+  attackRange: 1.5
+  timeBetweenAttacks: 2
+  animationSpeed: 0.15
+  minimumDifficultyLevel: 0
+  colliderRadius: 1.5
+  scaleColliderWithSize: 1
+  colliderSizeMultiplier: 2
+  pointsMultiplier: 1
+  bonusPoints: 0
+  awardsCombo: 1

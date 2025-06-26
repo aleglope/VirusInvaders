@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41d9b809a46aaa043b1c9ac3f6737aa7, type: 3}
+  m_Name: Difficulty_Hard
+  m_EditorClassIdentifier: 
+  difficultyLevel: 2
+  difficultyName: Hard
+  pointsRequired: 3500
+  difficultyColor: {r: 1, g: 1, b: 1, a: 1}
+  availableEnemies:
+  - {fileID: 11400000, guid: 1aca3582263686e42a0981784b72898c, type: 2}
+  - {fileID: 11400000, guid: 2437e398b2869dd4d9b8b60884800f10, type: 2}
+  - {fileID: 11400000, guid: c9ae91d0721408044a0eae6c5558b03e, type: 2}
+  spawnRate: 1.5
+  maxEnemiesOnScreen: 8
+  minEnemiesOnScreen: 1
+  enemySpeedMultiplier: 1.3
+  enemyHealthMultiplier: 1.2
+  spawnRateMultiplier: 1
+  enemyDamageMultiplier: 1
+  changeEnemyColors: 1
+  enemyColorVariations:
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 0, g: 1, b: 1, a: 1}
+  - {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
