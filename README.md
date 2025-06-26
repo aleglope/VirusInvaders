@@ -306,10 +306,10 @@ Este proyecto demuestra competencias en:
 
 ## 📧 **Contacto**
 
-**Desarrollador**: [Tu Nombre]  
-**Email**: [tu.email@ejemplo.com]  
-**LinkedIn**: [linkedin.com/in/tu-perfil]  
-**Portfolio**: [tu-portfolio.com]
+**Desarrollador**: [Alejandro Gonzalez Lopez]  
+**Email**: [agonzlopez.11@gmail.com]  
+**LinkedIn**: [www.linkedin.com/in/alejandrogonzlopez]  
+**Portfolio**: [aleglopez.tech]
 
 ---
 
