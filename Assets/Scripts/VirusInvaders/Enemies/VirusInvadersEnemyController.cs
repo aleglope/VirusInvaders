@@ -448,6 +448,12 @@ public class VirusInvadersEnemyController : MonoBehaviour
             float distanciaFinal = Vector2.Distance(transform.position, player.position);
             if (distanciaFinal <= enemyData.attackRange)
         {
+            // *** REPRODUCIR SONIDO DE ENEMY HIT (enemigo ataca al jugador) ***
+            if (VirusInvadersAudioManager.Instance != null)
+            {
+                VirusInvadersAudioManager.Instance.ReproducirEnemyHit();
+            }
+            
             VirusInvadersPlayerController playerController = player.GetComponent<VirusInvadersPlayerController>();
             if (playerController != null)
             {
@@ -507,6 +513,12 @@ public class VirusInvadersEnemyController : MonoBehaviour
         currentState = EnemyState.Dying;
         col.enabled = false;
         rb.simulated = false;
+        
+        // *** REPRODUCIR SONIDO DE MUERTE ***
+        if (VirusInvadersAudioManager.Instance != null)
+        {
+            VirusInvadersAudioManager.Instance.ReproducirMuerteEnemigo();
+        }
         
         ChangeAnimation(spritesDeath, false, "death");
         

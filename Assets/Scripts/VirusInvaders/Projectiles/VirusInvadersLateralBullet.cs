@@ -14,6 +14,7 @@ public class VirusInvadersLateralBullet : MonoBehaviour
     
     private Vector2 direccion = Vector2.up;
     private bool configurada = false;
+    private bool estaClavada = false;
     
     public void ConfigurarBala(Vector2 direccionMovimiento, float vel, float damage, Sprite sprite)
     {
@@ -36,19 +37,18 @@ public class VirusInvadersLateralBullet : MonoBehaviour
     
     void ConfigurarComponentes()
     {
-        // Asegurar que tenemos Rigidbody2D
+        // Configurar Rigidbody2D
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (rb == null)
         {
             rb = gameObject.AddComponent<Rigidbody2D>();
         }
         
-        // Configurar física
         rb.gravityScale = 0f;
         rb.linearVelocity = direccion * velocidad;
         rb.angularVelocity = 0f;
         
-        // Asegurar que tenemos collider
+        // Configurar Collider
         CircleCollider2D col = GetComponent<CircleCollider2D>();
         if (col == null)
         {
@@ -65,14 +65,17 @@ public class VirusInvadersLateralBullet : MonoBehaviour
         gameObject.tag = "Bullet";
         gameObject.layer = LayerMask.NameToLayer("Default");
         
-        // Rotar bala para coincidir con la dirección
-        float angle = Mathf.Atan2(direccion.y, direccion.x) * Mathf.Rad2Deg - 90f;
-        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        // Rotar hacia la dirección de movimiento
+        if (direccion != Vector2.zero)
+        {
+            float angle = Mathf.Atan2(direccion.y, direccion.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle + 90f, Vector3.forward);
+        }
         
         configurada = true;
     }
     
-    public void ConfigurarSprite(Sprite sprite)
+    void ConfigurarSprite(Sprite sprite)
     {
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         if (sr == null)
@@ -86,12 +89,12 @@ public class VirusInvadersLateralBullet : MonoBehaviour
         }
         else
         {
-            // Crear sprite cian temporal
+            // Crear sprite temporal
             Texture2D texture = new Texture2D(4, 12);
             Color[] pixels = new Color[4 * 12];
             for (int i = 0; i < pixels.Length; i++)
             {
-                pixels[i] = Color.cyan;
+                pixels[i] = Color.yellow;
             }
             texture.SetPixels(pixels);
             texture.Apply();
@@ -99,31 +102,25 @@ public class VirusInvadersLateralBullet : MonoBehaviour
             sr.sprite = Sprite.Create(texture, new Rect(0, 0, 4, 12), new Vector2(0.5f, 0.5f));
         }
         
-        // Configurar ordenamiento
         sr.sortingLayerName = "Default";
         sr.sortingOrder = 15;
     }
     
     void Update()
     {
-        // Asegurar que la bala siga moviéndose en dirección
-        if (configurada)
+        if (configurada && !estaClavada)
         {
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
             if (rb != null)
             {
-                Vector2 currentVelocity = rb.linearVelocity;
-                if (currentVelocity.magnitude < velocidad * 0.5f)
-                {
-                    rb.linearVelocity = direccion * velocidad;
-                }
+                // Mantener velocidad constante
+                rb.linearVelocity = direccion * velocidad;
             }
         }
     }
     
     void OnTriggerEnter2D(Collider2D other)
     {
-
         bool hitSomething = false;
         
         // Verificar si golpeó un enemigo
@@ -131,10 +128,22 @@ public class VirusInvadersLateralBullet : MonoBehaviour
         {
             hitSomething = true;
             
+            // Reproducir sonido de impacto usando AudioManager
+            if (VirusInvadersAudioManager.Instance != null)
+            {
+                VirusInvadersAudioManager.Instance.ReproducirSonidoImpacto();
+            }
+            
             // Registrar impacto con GameManager
             if (VirusInvadersGameManager.Instance != null)
             {
                 VirusInvadersGameManager.Instance.RegisterHit();
+            }
+            
+            // Crear efecto de explosión al golpear enemigo
+            if (createExplosionOnHit)
+            {
+                VirusInvadersBoomEffect.CreateExplosion(transform.position, explosionScale);
             }
             
             // Primero intentar el sistema nuevo EnemyController
@@ -152,31 +161,71 @@ public class VirusInvadersLateralBullet : MonoBehaviour
                     enemigo.RecibirDaño(daño);
                 }
             }
+            
+            // Destruir bala después del impacto
+            Destroy(gameObject);
+            return;
         }
         
-        // Verificar paredes (destruir al contacto con bordes)
+        // Verificar paredes - múltiples opciones de detección
+        bool esPared = false;
+        
+        // Opción 1: Por Layer "Environment"
         if (other.gameObject.layer == LayerMask.NameToLayer("Environment"))
         {
-            hitSomething = true;
+            esPared = true;
         }
         
-        // Crear efecto de explosión en punto de impacto
-        if (hitSomething && createExplosionOnHit)
+        // Opción 2: Por Tag "Wall" (si las paredes usan este tag)
+        if (other.CompareTag("Wall"))
         {
-            float scale = other.CompareTag("Enemy") ? explosionScale : explosionScale * 0.7f;
-            VirusInvadersBoomEffect.CreateExplosion(transform.position, scale);
+            esPared = true;
         }
         
-        // Destruir bala después del impacto
-        if (hitSomething)
+        // Opción 3: Por nombre del GameObject (para máxima compatibilidad)
+        string nombreObjeto = other.gameObject.name.ToLower();
+        if (nombreObjeto.Contains("wall") || nombreObjeto.Contains("pared") || 
+            nombreObjeto.Contains("border") || nombreObjeto.Contains("limite") ||
+            nombreObjeto.Contains("barrier") || nombreObjeto.Contains("barra"))
         {
-            Destroy(gameObject);
+            esPared = true;
+        }
+        
+        if (esPared)
+        {
+            ClavarBalaEnPared();
+            return;
+        }
+    }
+    
+    void ClavarBalaEnPared()
+    {
+        if (estaClavada) return;
+        
+        estaClavada = true;
+        
+        // Detener completamente el movimiento
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            rb.bodyType = RigidbodyType2D.Kinematic;
+        }
+        
+        // Cambiar el color para indicar que está clavada
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            sr.color = Color.gray;
         }
     }
     
     void OnBecameInvisible()
     {
-        // Destruir cuando esté fuera de pantalla
-        Destroy(gameObject);
+        if (!estaClavada)
+        {
+            Destroy(gameObject);
+        }
     }
 } 

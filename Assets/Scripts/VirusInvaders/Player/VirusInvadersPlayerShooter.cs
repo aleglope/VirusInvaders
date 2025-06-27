@@ -18,7 +18,7 @@ public class VirusInvadersPlayerShooter : MonoBehaviour
     public float velocidadBala = 15f;
     public float dañoBala = 50f;
     
-    // Referencias privadas
+    // Referencias privadas (SIN AudioSource ni configuración de audio)
     private float tiempoUltimoDisparo = 0f;
     private float tiempoUltimoDisparoLateral = 0f;
     private bool isGamePaused = false;
@@ -28,13 +28,11 @@ public class VirusInvadersPlayerShooter : MonoBehaviour
         ConfigurarComponentes();
         CargarTexturaBala();
         
-        // Suscribirse a eventos de pausa
         VirusInvadersGameManager.OnGamePaused += OnGamePaused;
     }
     
     void OnDestroy()
     {
-        // Desuscribirse de eventos
         VirusInvadersGameManager.OnGamePaused -= OnGamePaused;
     }
     
@@ -134,11 +132,16 @@ public class VirusInvadersPlayerShooter : MonoBehaviour
             return;
         }
         
-        // Instanciar la jeringuilla
+        // ✅ Usar solo AudioManager centralizado
+        if (VirusInvadersAudioManager.Instance != null)
+        {
+            VirusInvadersAudioManager.Instance.ReproducirSonidoDisparo();
+        }
+        
+        // Instanciar y configurar bala...
         GameObject nuevaJeringuilla = Instantiate(prefabBala, puntoDisparo.position, Quaternion.identity);
         nuevaJeringuilla.SetActive(true);
         
-        // Configurar la jeringuilla
         VirusInvadersBullet bullet = nuevaJeringuilla.GetComponent<VirusInvadersBullet>();
         if (bullet != null)
         {
@@ -153,6 +156,12 @@ public class VirusInvadersPlayerShooter : MonoBehaviour
         if (prefabBala == null || puntoDisparoIzquierdo == null || puntoDisparoDerecho == null) 
         {
             return;
+        }
+        
+        // ✅ Usar solo AudioManager centralizado
+        if (VirusInvadersAudioManager.Instance != null)
+        {
+            VirusInvadersAudioManager.Instance.ReproducirSonidoDisparo();
         }
         
         // Crear bala izquierda
@@ -178,6 +187,4 @@ public class VirusInvadersPlayerShooter : MonoBehaviour
         VirusInvadersBullet bulletComponentDer = balaDerecha.GetComponent<VirusInvadersBullet>();
         if (bulletComponentDer != null) DestroyImmediate(bulletComponentDer);
     }
-    
-
 }

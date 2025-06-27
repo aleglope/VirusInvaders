@@ -62,6 +62,13 @@ public class VirusInvadersGameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            
+            // Inicializar AudioManager si no existe
+            if (VirusInvadersAudioManager.Instance == null)
+            {
+                GameObject audioManagerObj = new GameObject("VirusInvadersAudioManager");
+                audioManagerObj.AddComponent<VirusInvadersAudioManager>();
+            }
         }
         else
         {
@@ -99,7 +106,7 @@ public class VirusInvadersGameManager : MonoBehaviour
         if (difficultyLevels.Length > 0)
         {
             currentDifficulty = difficultyLevels[0];
-            difficultyScoreMultiplier = 1f; // Multiplicador de dificultad base
+            difficultyScoreMultiplier = 1f;
         }
         
         // Buscar jugador si no está asignado
@@ -110,6 +117,12 @@ public class VirusInvadersGameManager : MonoBehaviour
         
         // Suscribirse al evento de muerte del jugador (prevenir suscripciones duplicadas)
         SubscribeToPlayerEvents();
+        
+        // *** INICIAR MÚSICA DEL NIVEL 1 AL COMENZAR EL JUEGO ***
+        if (VirusInvadersAudioManager.Instance != null)
+        {
+            VirusInvadersAudioManager.Instance.IniciarMusicaJuego();
+        }
         
         // Inicializar eventos
         OnScoreChanged?.Invoke(currentScore);
@@ -456,6 +469,13 @@ public class VirusInvadersGameManager : MonoBehaviour
         
         // Notificar a componentes legacy para que se reseteén
         OnGameReset?.Invoke();
+        
+        // *** REINICIAR MÚSICA DEL NIVEL 1 DESPUÉS DEL RESET ***
+        if (VirusInvadersAudioManager.Instance != null)
+        {
+            VirusInvadersAudioManager.Instance.IniciarMusicaJuego();
+        }
+        
         // Sexto: Reanudar juego (esto debe ser ÚLTIMO)
         isGamePaused = false;
         OnGamePaused?.Invoke(false);

@@ -480,6 +480,12 @@ public class VirusInvadersCoronavirusEnemy : MonoBehaviour
             float distanciaFinal = Vector2.Distance(transform.position, jugador.position);
             if (distanciaFinal <= distanciaAtaque)
         {
+            // *** REPRODUCIR SONIDO DE ENEMY HIT (enemigo ataca al jugador) ***
+            if (VirusInvadersAudioManager.Instance != null)
+            {
+                VirusInvadersAudioManager.Instance.ReproducirEnemyHit();
+            }
+            
             VirusInvadersPlayerController playerController = jugador.GetComponent<VirusInvadersPlayerController>();
             if (playerController != null)
             {
@@ -533,6 +539,18 @@ public class VirusInvadersCoronavirusEnemy : MonoBehaviour
         
         estaMuerto = true;
         estadoActual = EstadoEnemigo.Muriendo;
+        
+        // *** DESACTIVAR COLLIDER INMEDIATAMENTE PARA EVITAR MÁS DAÑO ***
+        if (col != null)
+        {
+            col.enabled = false;
+        }
+        
+        // *** REPRODUCIR SONIDO DE MUERTE ***
+        if (VirusInvadersAudioManager.Instance != null)
+        {
+            VirusInvadersAudioManager.Instance.ReproducirMuerteEnemigo();
+        }
         
         // *** INTEGRACIÓN CON SISTEMA DE PUNTUACIÓN CORREGIDA ***
         if (VirusInvadersGameManager.Instance != null)

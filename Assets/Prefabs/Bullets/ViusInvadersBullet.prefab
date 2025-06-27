@@ -171,3 +171,5 @@ MonoBehaviour:
   "radioDa\xF1oColision": 0.5
   createExplosionOnHit: 1
   explosionScale: 0.3
+  sonidoImpacto: {fileID: 8300000, guid: 1741845a97fbcd94c90e66ddb14b33dc, type: 3}
+  volumenImpacto: 0.8

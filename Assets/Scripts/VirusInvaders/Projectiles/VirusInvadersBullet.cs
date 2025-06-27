@@ -114,13 +114,18 @@ public class VirusInvadersBullet : MonoBehaviour
     
     void OnTriggerEnter2D(Collider2D other)
     {
-
         bool hitSomething = false;
         
         // Verificar si golpeó un enemigo
         if (other.CompareTag("Enemy"))
         {
             hitSomething = true;
+            
+            // Reproducir sonido de impacto usando AudioManager
+            if (VirusInvadersAudioManager.Instance != null)
+            {
+                VirusInvadersAudioManager.Instance.ReproducirSonidoImpacto();
+            }
             
             // Registrar impacto con GameManager
             if (VirusInvadersGameManager.Instance != null)

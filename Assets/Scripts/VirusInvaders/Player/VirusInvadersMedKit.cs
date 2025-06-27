@@ -191,6 +191,11 @@ public class VirusInvadersMedKit : MonoBehaviour
         VirusInvadersPlayerController jugador = other.GetComponent<VirusInvadersPlayerController>();
         if (jugador != null)
         {
+            if (VirusInvadersAudioManager.Instance != null)
+            {
+                VirusInvadersAudioManager.Instance.ReproducirMedKit();
+            }
+            
             float curacionReal = cantidadCuracion;
             jugador.Curar(curacionReal);
             
